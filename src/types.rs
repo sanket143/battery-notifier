@@ -22,3 +22,9 @@ impl SBattery {
           .expect("Unable to create manager")
     }
 }
+
+pub struct NudgePayload <'a> {
+    pub configurations: &'a serde_json::Value,
+    pub battery: &'a mut battery::Battery
+}
+

@@ -8,17 +8,28 @@ use crate::config;
 
 static SBATTERY: types::SBattery = types::SBattery;
 
-pub fn nudge() {
+pub fn ticker() {
     let mut battery = SBATTERY.batteries()
       .expect("Unable to extract batteries");
 
-    config::get();
+    let configurations = config::get();
+    let mut payload = types::NudgePayload {
+        configurations,
+        battery: &mut battery
+    };
 
-    show_notification(&battery.state_of_charge());
+    loop {
+        nudge(&mut payload);
+    }
+}
+
+fn nudge(payload: &mut types::NudgePayload) {
+
+    show_notification(&payload.battery.state_of_charge());
 
     thread::sleep(Duration::from_secs(5));
 
-    SBATTERY.manager().refresh(&mut battery)
+    SBATTERY.manager().refresh(&mut payload.battery)
       .expect("Unable to refresh battery");
 }
 

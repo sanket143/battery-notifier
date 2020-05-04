@@ -1,8 +1,6 @@
 use battery_notifier::actions;
 
-fn main() -> battery::Result<()> {
-    loop {
-      actions::nudge();
-    }
+fn main() {
+    actions::ticker();
 }
 
