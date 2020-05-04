@@ -4,21 +4,21 @@ use rustc_serialize::json::Json;
 use notify_rust::Notification;
 use battery::units;
 use std::io;
+use std::io::Read;
 use std::thread;
 use std::time::Duration;
 use std::fs::File;
-use std::io::copy;
-use std::io::stdout;
 
 fn main() -> battery::Result<()> {
     let manager = battery::Manager::new()?;
   
-    let mut file = File::open("/home/sanket143/.config/battery_notifier_s/config.json").unwrap();
-    let mut stdout = stdout();
-    let str = &copy(&mut file, &mut stdout).unwrap().to_string();
-    let data = Json::from_str(str).unwrap();
+    let mut f = File::open("/home/sanket143/.config/battery_notifier_s/config.json")
+      .expect("Unable to open");
+    let mut buffer = String::new();
 
-    println!("data: {:?}", data);
+    f.read_to_string(&mut buffer)?;
+
+    println!("{}", buffer);
 
     let mut battery = match manager.batteries()?.next() {
         Some(Ok(battery)) => battery,
