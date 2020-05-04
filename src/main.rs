@@ -1,28 +1,16 @@
 extern crate rustc_serialize;
 
-use rustc_serialize::json::Json;
+use battery_notifier::config;
 use notify_rust::Notification;
 use battery::units;
 use std::io;
 use std::io::Read;
 use std::thread;
 use std::time::Duration;
-use std::fs::File;
 
 fn main() -> battery::Result<()> {
     let manager = battery::Manager::new()?;
-  
-    let mut f = File::open("/home/sanket143/.config/battery_notifier_s/config.json")
-      .expect("Unable to open");
-    let mut buffer = String::new();
-
-    f.read_to_string(&mut buffer)?;
-    println!("{}", buffer);
-
-    let data = Json::from_str(&buffer).unwrap();
-
-    println!("{}", data);
-
+    config::get();
     let mut battery = match manager.batteries()?.next() {
         Some(Ok(battery)) => battery,
         Some(Err(e)) => {
