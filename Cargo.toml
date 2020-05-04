@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 battery = "0.7.5"
 notify-rust = "3.6.3"
+rustc-serialize = "0.3"
