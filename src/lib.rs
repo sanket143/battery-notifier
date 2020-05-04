@@ -1,3 +1,3 @@
 mod types;
-pub mod config;
+mod config;
 pub mod actions;

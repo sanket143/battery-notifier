@@ -3,8 +3,10 @@ use std::time::Duration;
 use notify_rust::Notification;
 use battery::units;
 use crate::types;
+use crate::config;
 
-static SBATTERY: types::SBattery = types::SBattery {};
+static SBATTERY: types::SBattery = types::SBattery;
+static CONFIG_FETCHED: bool = false;
 
 pub fn nudge() {
     let mut battery = SBATTERY.batteries()
@@ -12,6 +14,7 @@ pub fn nudge() {
 
     show_notification(&battery.state_of_charge());
 
+    config::get();
     thread::sleep(Duration::from_secs(5));
 
     SBATTERY.manager().refresh(&mut battery)

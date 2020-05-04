@@ -22,3 +22,10 @@ impl SBattery {
           .expect("Unable to create manager")
     }
 }
+
+pub struct Config;
+
+pub struct Message {
+    message: String,
+    status: bool
+}

@@ -1,18 +1,21 @@
-use rustc_serialize::json::Json;
 use std::env;
 use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
+use crate::types;
 
-pub fn get() -> Json {
-  let home = env::var("HOME").expect("Unable to find home");
-  let config_path = ".config/battery_notifier_s/config.json";
-  let config_path: PathBuf = [home, config_path.to_string()].iter().collect();
+static CONFIGURATION: types::Config = types::Config;
 
-  let mut f = File::open(config_path).expect("Unable to open file");
-  let mut buffer = String::new();
+pub fn get() -> serde_json::Value {
+    let home = env::var("HOME").expect("Unable to find home");
+    let config_path = ".config/battery_notifier_s/config.json";
+    let config_path: PathBuf = [home, config_path.to_string()].iter().collect();
 
-  f.read_to_string(&mut buffer).expect("Unable to read string");
+    let mut f = File::open(config_path).expect("Unable to open file");
+    let mut buffer = String::new();
 
-  Json::from_str(&buffer).unwrap()
+    f.read_to_string(&mut buffer).expect("Unable to read string");
+
+    serde_json::from_str(&buffer)
+      .expect("Unable to parse JSON")
 }
