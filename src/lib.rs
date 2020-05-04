@@ -4,16 +4,18 @@ pub mod config {
   use std::env;
   use std::fs::File;
   use std::io::Read;
+  use std::path::PathBuf;
 
-  pub fn get() {
-    let HOME = env::var("HOME");
-    println!("{:?}", HOME);
-    let mut f = File::open("/home/sanket143/.config/battery_notifier_s/config.json").expect("Unable to open file");
+  pub fn get() -> Json {
+    let home = env::var("HOME").expect("Unable to find home");
+    let config_path = ".config/battery_notifier_s/config.json";
+    let config_path: PathBuf = [home, config_path.to_string()].iter().collect();
+
+    let mut f = File::open(config_path).expect("Unable to open file");
     let mut buffer = String::new();
 
     f.read_to_string(&mut buffer).expect("Unable to read string");
 
-    let data = Json::from_str(&buffer).unwrap();
-
+    Json::from_str(&buffer).unwrap()
   }
 }

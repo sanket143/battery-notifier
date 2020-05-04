@@ -1,16 +1,13 @@
-extern crate rustc_serialize;
-
 use battery_notifier::config;
 use notify_rust::Notification;
 use battery::units;
 use std::io;
-use std::io::Read;
 use std::thread;
 use std::time::Duration;
 
 fn main() -> battery::Result<()> {
+    let config = config::get();
     let manager = battery::Manager::new()?;
-    config::get();
     let mut battery = match manager.batteries()?.next() {
         Some(Ok(battery)) => battery,
         Some(Err(e)) => {
