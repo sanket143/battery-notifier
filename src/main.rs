@@ -17,8 +17,11 @@ fn main() -> battery::Result<()> {
     let mut buffer = String::new();
 
     f.read_to_string(&mut buffer)?;
-
     println!("{}", buffer);
+
+    let data = Json::from_str(&buffer).unwrap();
+
+    println!("{}", data);
 
     let mut battery = match manager.batteries()?.next() {
         Some(Ok(battery)) => battery,
