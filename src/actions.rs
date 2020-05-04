@@ -18,14 +18,17 @@ pub fn nudge() {
       .expect("Unable to refresh battery");
 }
 
-pub fn show_notification(ratio: &units::Ratio) {
+fn show_notification(ratio: &units::Ratio) {
+    let mut body = String::from("Current Battery: ");
+    let ratio = format!("{:.2?}", ratio);
+    let ratio: f32 = ratio.parse().expect("Unable to parse");
+    let ratio = format!("{}", ratio * 100.0);
 
-    let mut _body = String::from("Current Battery: ");
-    println!("{:?}", ratio);
+    body.push_str(&ratio);
 
     Notification::new()
         .summary("Lisa")
-        .body("hello")
+        .body(&body)
         .show()
         .unwrap();
 }
