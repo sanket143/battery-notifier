@@ -32,14 +32,21 @@ fn nudge(payload: &mut types::NudgePayload) {
       println!("{}", percentage.to_string());
       println!("{:?}", payload.configurations);
 
+      let message = payload
+        .configurations["messages"]["100"][0]["message"]
+        .as_str()
+        .expect("Unable to convert into string")
+        .to_string();
+      let name = payload
+        .configurations["name"]
+        .as_str()
+        .expect("Unable to convert into string")
+        .to_string();
+
       let npayload = types::NotifyPayload {
           percentage,
-          message: payload
-            .configurations["messages"]["100"][0]["message"]
-            .to_string(),
-          name: payload
-            .configurations["name"]
-            .to_string()
+          message,
+          name
       };
 
       show_notification(&npayload);
