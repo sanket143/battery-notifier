@@ -1,5 +1,5 @@
 [Unit]
-Description=Personal Homepage
+Description=Battery Notifier
 After=network.target
 StartLimitIntervalSec=0
 
@@ -7,7 +7,7 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=1
-ExecStart=/usr/bin/env /home/sanket143/Remote/lisa/bin/lisa
+ExecStart=/usr/bin/env $(systemd-path user-binaries)/battery_notifier
 
 [Install]
 WantedBy=multi-user.target
