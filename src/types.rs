@@ -1,4 +1,8 @@
 use std::io;
+use rand::Rng;
+use serde_json::Value;
+
+use crate::types;
 
 pub struct SBattery;
 
@@ -42,8 +46,6 @@ impl NudgePayload <'_> {
           .parse()
           .expect("Unable to parse");
 
-        println!("{} {}", self.prev, percentage);
-
         if self.prev != percentage {
             self.prev = percentage;
             self.checked = false;
@@ -53,6 +55,8 @@ impl NudgePayload <'_> {
     }
 
     pub fn check(&mut self) -> bool {
+        self.percentage();
+
         let checked = self.checked;
 
         if !checked {
@@ -61,10 +65,53 @@ impl NudgePayload <'_> {
 
         return !checked;
     }
+
+    pub fn get_notify_payload(&mut self) -> Option<types::NotifyPayload> {
+        let state = self.battery.state();
+        let percentage = &self.percentage().to_string();
+        let configurations = &self.configurations;
+        let messages_n = &configurations["messages"];
+        let messages = messages_n[percentage].as_array();
+
+        match messages {
+            Some(messages) => {
+
+                let messages: Vec<&Value> = messages
+                  .iter()
+                  .filter(|&x| x["status"] == "CHARGING")
+                  .collect();
+
+                let no_of_msgs = messages.len();
+
+                if no_of_msgs == 0 {
+                    return None
+                }
+
+                let msg_no = rand::thread_rng()
+                  .gen_range(0, no_of_msgs);
+
+                let messages_n = &messages_n["100"];
+                let message = messages_n[0]["message"]
+                  .as_str()
+                  .expect("Unable to convert into string")
+                  .to_string();
+
+                let name = configurations["name"]
+                  .as_str()
+                  .expect("Unable to convert into string")
+                  .to_string();
+
+                Some(types::NotifyPayload {
+                    message,
+                    name
+                })
+            },
+            None => None
+        }
+    }
 }
 
 pub struct NotifyPayload {
-    pub percentage: i32,
     pub message: String,
     pub name: String
 }

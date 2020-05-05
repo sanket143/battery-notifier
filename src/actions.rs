@@ -25,31 +25,10 @@ pub fn ticker() {
 }
 
 fn nudge(payload: &mut types::NudgePayload) {
-    let state = payload.battery.state();
-    let percentage = payload.percentage();
-
     if payload.check() {
-      println!("{}", percentage.to_string());
-      println!("{:?}", payload.configurations);
-
-      let message = payload
-        .configurations["messages"]["100"][0]["message"]
-        .as_str()
-        .expect("Unable to convert into string")
-        .to_string();
-      let name = payload
-        .configurations["name"]
-        .as_str()
-        .expect("Unable to convert into string")
-        .to_string();
-
-      let npayload = types::NotifyPayload {
-          percentage,
-          message,
-          name
-      };
-
-      show_notification(&npayload);
+      if let Some(payload) = payload.get_notify_payload() {
+          show_notification(&payload);
+      }
 
     }
 
@@ -60,8 +39,6 @@ fn nudge(payload: &mut types::NudgePayload) {
 }
 
 fn show_notification(payload: &types::NotifyPayload) {
-    let body = String::from("Current Battery: ");
-
     Notification::new()
       .summary(&payload.name)
       .body(&payload.message)
