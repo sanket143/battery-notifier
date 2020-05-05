@@ -32,7 +32,17 @@ fn nudge(payload: &mut types::NudgePayload) {
       println!("{}", percentage.to_string());
       println!("{:?}", payload.configurations);
 
-      show_notification(&payload);
+      let npayload = types::NotifyPayload {
+          percentage,
+          message: payload
+            .configurations["messages"]["100"][0]["message"]
+            .to_string(),
+          name: payload
+            .configurations["name"]
+            .to_string()
+      };
+
+      show_notification(&npayload);
 
     }
 
@@ -42,12 +52,12 @@ fn nudge(payload: &mut types::NudgePayload) {
       .expect("Unable to refresh battery");
 }
 
-fn show_notification(payload: &types::NudgePayload) {
+fn show_notification(payload: &types::NotifyPayload) {
     let body = String::from("Current Battery: ");
 
     Notification::new()
-      .summary("Lisa")
-      .body(&body)
+      .summary(&payload.name)
+      .body(&payload.message)
       .show()
       .unwrap();
 }
