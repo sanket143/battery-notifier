@@ -67,18 +67,17 @@ impl NudgePayload <'_> {
     }
 
     pub fn get_notify_payload(&mut self) -> Option<types::NotifyPayload> {
-        let state = self.battery.state();
         let percentage = &self.percentage().to_string();
         let configurations = &self.configurations;
-        let messages_n = &configurations["messages"];
-        let messages = messages_n[percentage].as_array();
+        let messages = &configurations["messages"];
+        let messages = messages[percentage].as_array();
 
         match messages {
             Some(messages) => {
-
+                let state = self.battery.state().to_string();
                 let messages: Vec<&Value> = messages
                   .iter()
-                  .filter(|&x| x["status"] == "CHARGING")
+                  .filter(|&x| x["status"] == state)
                   .collect();
 
                 let no_of_msgs = messages.len();
@@ -90,8 +89,7 @@ impl NudgePayload <'_> {
                 let msg_no = rand::thread_rng()
                   .gen_range(0, no_of_msgs);
 
-                let messages_n = &messages_n["100"];
-                let message = messages_n[0]["message"]
+                let message = messages[msg_no]["message"]
                   .as_str()
                   .expect("Unable to convert into string")
                   .to_string();
@@ -106,6 +104,7 @@ impl NudgePayload <'_> {
                     name
                 })
             },
+
             None => None
         }
     }
