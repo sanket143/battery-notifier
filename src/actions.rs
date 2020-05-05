@@ -1,5 +1,4 @@
 use notify_rust::Notification;
-use battery::units;
 use std::thread;
 use std::time::Duration;
 
@@ -15,7 +14,9 @@ pub fn ticker() {
     let configurations = config::get();
     let mut payload = types::NudgePayload {
         configurations,
-        battery: &mut battery
+        battery: &mut battery,
+        prev: 0,
+        checked: false
     };
 
     loop {
@@ -24,8 +25,16 @@ pub fn ticker() {
 }
 
 fn nudge(payload: &mut types::NudgePayload) {
+    let state = payload.battery.state();
+    let percentage = payload.percentage();
 
-    show_notification(&payload.battery.state_of_charge());
+    if payload.check() {
+      println!("{}", percentage.to_string());
+      println!("{:?}", payload.configurations);
+
+      show_notification(&payload);
+
+    }
 
     thread::sleep(Duration::from_secs(5));
 
@@ -33,13 +42,8 @@ fn nudge(payload: &mut types::NudgePayload) {
       .expect("Unable to refresh battery");
 }
 
-fn show_notification(ratio: &units::Ratio) {
-    let mut body = String::from("Current Battery: ");
-    let ratio = format!("{:.2?}", ratio);
-    let ratio: f32 = ratio.parse().expect("Unable to parse");
-    let ratio = format!("{}", ratio * 100.0);
-
-    body.push_str(&ratio);
+fn show_notification(payload: &types::NudgePayload) {
+    let body = String::from("Current Battery: ");
 
     Notification::new()
       .summary("Lisa")
