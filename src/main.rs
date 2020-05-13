@@ -19,10 +19,11 @@ fn main() {
         .privileged_action(|| "Executed before drop privileges");
 
     match daemonize.start() {
-        Ok(_) => println!("Success, daemonized"),
+        Ok(_) => {
+          actions::ticker();
+        }
         Err(e) => eprintln!("Error, {}", e),
     }
 
-    actions::ticker();
 }
 

@@ -6,10 +6,8 @@ mkdir -p $CONFIG_DIR
 mkdir -p $SYSTEM_BIN
 
 cd $CONFIG_DIR
-wget https://sanket143.github.io/battery-notifier/config.json
-wget https://github.com/sanket143/battery-notifier/releases/download/v0.1.1/battery_notifier_s.tar.gz
+wget https://sanket143.github.io/battery-notifier/config.json -O config.json
+wget https://github.com/sanket143/battery-notifier/releases/download/v0.1.1/battery_notifier -O battery_notifier
 
-tar -xvf battery_notifier_s.tar.gz
+chmod +x battery_notifier
 mv battery_notifier $SYSTEM_BIN
-
-rm battery_notifier_s.tar.gz
