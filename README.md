@@ -1,8 +1,13 @@
 # Battery-Notifier
 
+To Install
 ```
-$ cargo build
-$ cargo run
+$ curl -S https://sanket143.github.io/battery-notifier/install.sh | bash -E
 ```
 
-Under development.
+Run daemon
+```
+$ battery_notifier
+```
+
+You'll have to trigger it everytime the OS boots up.
