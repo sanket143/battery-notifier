@@ -8,10 +8,22 @@ use crate::config;
 static SBATTERY: types::SBattery = types::SBattery;
 
 pub fn ticker() {
+
     let mut battery = SBATTERY.batteries()
       .expect("Unable to extract batteries");
 
     let configurations = config::get();
+
+    let payload = types::NotifyPayload {
+        name: configurations["name"]
+          .as_str()
+          .expect("Unable to convert into string")
+          .to_string(),
+        message: "Woo, I am running.".to_string(),
+    };
+
+    show_notification(&payload);
+
     let mut payload = types::NudgePayload {
         configurations,
         battery: &mut battery,
