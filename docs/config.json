@@ -21,9 +21,15 @@
         "status": "charging"
       }
     ],
+    "87": [
+      {
+        "message": "Hehe! What u doin'?",
+        "status": "discharging"
+      }
+    ],
     "80": [
       {
-        "message": "Hey! What u doin'? Am feeling so energetic today, gonna do a lot of work.",
+        "message": "Hey! Am feeling so energetic today, gonna do a lot of work.",
         "status": "discharging"
       }
     ],
