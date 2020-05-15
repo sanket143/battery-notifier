@@ -4,6 +4,7 @@ use battery_notifier::actions;
 use std::fs::File;
 use daemonize::Daemonize;
 
+
 fn main() {
     let stdout = File::create("/tmp/battery_notifier_s.out").unwrap();
     let stderr = File::create("/tmp/battery_notifier_s.err").unwrap();
@@ -24,6 +25,5 @@ fn main() {
         }
         Err(e) => eprintln!("Error, {}", e),
     }
-
 }
 

@@ -38,13 +38,23 @@ impl NudgePayload <'_> {
     pub fn percentage(&mut self) -> i32 {
         let percentage = self.battery.state_of_charge();
         let percentage = format!("{:.2?}", percentage);
-        let percentage: f32 = percentage
-          .parse()
-          .expect("Unable to parse");
+        let percentage = percentage.parse::<f32>();
 
-        let percentage: i32 = format!("{}", percentage * 100.0)
-          .parse()
-          .expect("Unable to parse");
+        if percentage.is_err() {
+            return 0;
+        }
+
+        let percentage = percentage.unwrap();
+
+        println!("{}", percentage);
+        let percentage = format!("{}", percentage * 100.0)
+            .parse::<i32>();
+
+        if percentage.is_err() {
+            return 0;
+        }
+
+        let percentage = percentage.unwrap();
 
         if self.prev != percentage {
             self.prev = percentage;
