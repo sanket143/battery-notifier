@@ -7,7 +7,7 @@ mkdir -p $SYSTEM_BIN
 
 cd $CONFIG_DIR
 wget https://sanket143.github.io/battery-notifier/config.json -O config.json
-wget https://github.com/sanket143/battery-notifier/releases/download/v0.1.2/battery_notifier -O battery_notifier
+wget https://github.com/sanket143/battery-notifier/releases/download/v0.1.3/battery_notifier -O battery_notifier
 
 chmod +x battery_notifier
 mv battery_notifier $SYSTEM_BIN
